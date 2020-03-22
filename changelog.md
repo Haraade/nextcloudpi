@@ -1,5 +1,27 @@
 
-[v1.20.7](https://github.com/nextcloud/nextcloudpi/commit/8ce053f) (2020-01-26) fail2ban: update regex for NC17
+[v1.23.1](https://github.com/nextcloud/nextcloudpi/commit/317c2aa) (2020-03-15) ncp-web: check for possibly missing index
+
+[v1.23.0](https://github.com/nextcloud/nextcloudpi/commit/d108fad) (2020-03-13) upgrade to NC18.0.2
+
+[v1.22.3 ](https://github.com/nextcloud/nextcloudpi/commit/c09dfd9) (2020-03-02) nc-snapshot-auto: read datadir location during execution
+
+[v1.22.2 ](https://github.com/nextcloud/nextcloudpi/commit/f71c8c8) (2020-03-02) nc-maintenance: add is_active
+
+[v1.22.1 ](https://github.com/nextcloud/nextcloudpi/commit/c49c390) (2020-03-03) samba: option to apply only to a NC group (#1048)
+
+[v1.22.0 ](https://github.com/nextcloud/nextcloudpi/commit/9304c86) (2020-03-03) Add nc-trusted-proxies (#1094)
+
+[v1.21.0](https://github.com/nextcloud/nextcloudpi/commit/4a51c1f) (2020-02-28) upgrade to NC18.0.1
+
+[v1.20.11](https://github.com/nextcloud/nextcloudpi/commit/f066b03) (2020-02-27) redis: make sure we have the right permissions for conf file
+
+[v1.20.10](https://github.com/nextcloud/nextcloudpi/commit/c0cee6b) (2020-02-12) fail2ban: fix regex for NC18
+
+[v1.20.9 ](https://github.com/nextcloud/nextcloudpi/commit/0c538ae) (2020-02-04) add notify_admin functionality
+
+[v1.20.8 ](https://github.com/nextcloud/nextcloudpi/commit/986046f) (2020-02-05) nc-backup: add more info to description (#1073)
+
+[v1.20.7 ](https://github.com/nextcloud/nextcloudpi/commit/b404765) (2020-01-26) fail2ban: update regex for NC17
 
 [v1.20.6 ](https://github.com/nextcloud/nextcloudpi/commit/4a99207) (2020-01-21) ncp-config: dont save passwords
 
@@ -11,7 +33,7 @@
 
 [v1.20.2 ](https://github.com/nextcloud/nextcloudpi/commit/953c47a) (2019-11-13) Extend the ssh configuration check by calling the echo command if the first check fails.
 
-[v1.20.1](https://github.com/nextcloud/nextcloudpi/commit/6d0bc6b) (2019-12-19) Revert "build: dont use empty values by default"
+[v1.20.1 ](https://github.com/nextcloud/nextcloudpi/commit/6d0bc6b) (2019-12-19) Revert "build: dont use empty values by default"
 
 [v1.20.0 ](https://github.com/nextcloud/nextcloudpi/commit/f75c415) (2019-12-19) upgrade to NC17.0.2
 

@@ -1,41 +1,22 @@
 #!/bin/bash
 
-# Periodically update all installed Nextcloud Apps
+# Manually add trusted proxies in NextCloudPi
 #
-# Copyleft 2019 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
+# Copyleft 2019 by Pascal Haefliger <45995338+paschaef_a_t_users_d_o_t_noreply_d_o_tgithub_d_o_t_com>
 # GPL licensed (see end of file) * Use at your own risk!
 #
-# More at: https://ownyourbits.com
 #
 
-configure() 
+configure()
 {
-  local cronfile=/etc/cron.daily/ncp-autoupdate-apps
+  [[ "$PROXY1" != "" ]] && ncc config:system:set trusted_proxies 0 --value="$PROXY1"
+  [[ "$PROXY2" != "" ]] && ncc config:system:set trusted_proxies 1 --value="$PROXY2"
+  [[ "$PROXY3" != "" ]] && ncc config:system:set trusted_proxies 2 --value="$PROXY3"
 
-  [[ "$ACTIVE" != "yes" ]] && { 
-    rm -f "$cronfile"
-    echo "automatic app updates disabled"
-    return 0
-  }
-
-  cat > "$cronfile" <<EOF
-#!/bin/bash
-source /usr/local/etc/library.sh
-OUT="\$(
-echo "[ nc-update-nc-apps-auto ]"
-echo "checking for updates..."
-/usr/local/bin/ncc app:update --all -n
-)"
-echo "\$OUT" >> /var/log/ncp.log
-
-APPS=\$( echo "\$OUT" | grep 'updated\$' | awk '{ print \$1 }')
-[[ "\$APPS" != "" ]] && notify_admin "Apps updated" "\$APPS"
-EOF
-  chmod 755 "$cronfile"
-  echo "automatic app updates enabled"
+  exit 0
 }
 
-install() { :; }
+install(){ :; }
 
 # License
 #
