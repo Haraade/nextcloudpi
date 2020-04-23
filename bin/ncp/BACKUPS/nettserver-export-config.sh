@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# Export NextCloudPi configuration
+# Export NETTSERVER configuration
 #
 #
-# Copyleft 2017 by Courtney Hicks
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 
 
@@ -13,13 +12,13 @@ configure()
 {
   [[ -d "$DIR" ]] || { echo "directory $DIR does not exist"; return 1; }
 
-  local destfile="$DIR"/ncp-config_$( date +"%Y%m%d" ).tar 
+  local destfile="$DIR"/nettserver-config_$( date +"%Y%m%d" ).tar 
 
-  tar -cf "$destfile" -C /usr/local/etc/ncp-config.d .
+  tar -cf "$destfile" -C /usr/local/etc/nettserver-config.d .
   chmod 600 "$destfile"
 
   cd $OLDPWD
-  rm -rf /tmp/ncp-export
+  rm -rf /tmp/nettserver-export
   echo -e "configuration exported to $destfile"
 }
 
