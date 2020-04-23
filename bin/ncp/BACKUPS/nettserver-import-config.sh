@@ -1,15 +1,12 @@
 #!/bin/bash
 
-# Import NextCloudPi configuration
+# Import NETTSERVER configuration
 #
 #
-# Copyleft 2017 by Courtney Hicks
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 
-
-
-CFGDIR="/usr/local/etc/ncp-config.d"
+CFGDIR="/usr/local/etc/nettserver-config.d"
 
 configure() 
 {
@@ -20,16 +17,6 @@ configure()
 
   # extract export
   tar -xf "$FILE" -C "$CFGDIR"
-
-  # UGLY workaround to prevent apache from restarting upon activating some extras
-  # which leads to the operation appearing to fail in ncp-web
-  #echo "invalid_op" >> /etc/apache2/sites-available/000-default.conf
-
-  # activate
-  # TODO
-
-  # Fix invalid configuration
-  #sed -i "/^invalid_op/d" /etc/apache2/sites-available/000-default.conf
 
   echo -e "\nconfiguration restored"
 
