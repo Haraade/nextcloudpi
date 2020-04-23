@@ -3,15 +3,12 @@
 #!/bin/bash
 # Nextcloud restore backup
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
-#
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
+# GPL licensed - end of file
 #
 
 install()
 {
-  cat > /usr/local/bin/ncp-restore <<'EOF'
+  cat > /usr/local/bin/nettserver-restore <<'EOF'
 #!/bin/bash
 set -eE
 
@@ -30,7 +27,7 @@ DIR="$( cd "$( dirname "$BACKUPFILE" )" &>/dev/null && pwd )" #abspath
 [[ -f "$BACKUPFILE"   ]] || { echo "$BACKUPFILE not found"          ; exit 1; }
 [[ "$DIR" =~ "$NCDIR" ]] && { echo "Refusing to restore from $NCDIR"; exit 1; }
 
-TMPDIR="$( mktemp -d "$( dirname "$BACKUPFILE" )"/ncp-restore.XXXXXX )" || { echo "Failed to create temp dir" >&2; exit 1; }
+TMPDIR="$( mktemp -d "$( dirname "$BACKUPFILE" )"/nettserver-restore.XXXXXX )" || { echo "Failed to create temp dir" >&2; exit 1; }
 grep -q -e ext -e btrfs <( stat -fc%T "$TMPDIR" ) || { echo "Can only restore from ext/btrfs filesystems"     >&2; exit 1; }
 
 TMPDIR="$( cd "$TMPDIR" &>/dev/null && pwd )" || { echo "$TMPDIR not found"; exit 1; } #abspath
@@ -164,12 +161,12 @@ sudo -u www-data php occ files:scan-app-data
 [[ "$NEED_RESTART" == "1" ]] && \
   bash -c " sleep 3; service php${PHPVER}-fpm restart" &>/dev/null &
 EOF
-  chmod +x /usr/local/bin/ncp-restore
+  chmod +x /usr/local/bin/nettserver-restore
 }
 
 configure()
 {
-  ncp-restore "$BACKUPFILE"
+  nettserver-restore "$BACKUPFILE"
 }
 
 # License
