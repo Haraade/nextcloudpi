@@ -59,7 +59,7 @@ BKP="$( ls -1t /var/www/nextcloud-bkp_*.tar.gz 2>/dev/null | head -1 )"
   echo "Detected interrupted upgrade. Restoring..."
   BKP_NEW="failed_$BKP"
   mv "$BKP" "$BKP_NEW"
-  ncp-restore "$BKP_NEW" && rm "$BKP_NEW"
+  nettserver-restore "$BKP_NEW" && rm "$BKP_NEW"
 }
 
 exit 0
