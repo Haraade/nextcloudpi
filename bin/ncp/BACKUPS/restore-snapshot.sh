@@ -3,10 +3,8 @@
 #!/bin/bash
 # Nextcloud restore backup
 #
-# Copyleft 2019 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at nextcloudpi.com
 #
 
 install() { :; }
@@ -34,13 +32,13 @@ configure()
     return 1
   }
 
-  btrfs-snp $mountpoint autobackup 0 0 ../ncp-snapshots || return 1
+  btrfs-snp $mountpoint autobackup 0 0 ../nettserver-snapshots || return 1
 
   ncc maintenance:mode --on
   btrfs subvolume delete   "$datadir" || return 1
   btrfs subvolume snapshot "$SNAPSHOT" "$datadir"
   ncc maintenance:mode --off
-  ncp-scan
+  nettserver-scan
 
   echo "snapshot $SNAPSHOT restored"
 }
