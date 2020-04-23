@@ -2,13 +2,11 @@
 
 # Upgrade to a different Nextcloud version
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed
 #
 # Usage:
-#       bash ncp-update-nc <version>
+# bash nettserver-update-nc <version>
 #
-# More at https://ownyourbits.com
 #
 
 # test cases
@@ -62,7 +60,6 @@ echo "Available Nextcloud version $VER"
 [[ "$NEED_UPDATE" == "true" ]] || { echo "Nothing to update"; exit 1; }
 
 # make sure that cron.php is not running and there are no pending jobs
-# https://github.com/nextcloud/server/issues/10949
 pgrep -cf cron.php &>/dev/null && { pkill -f cron.php; sleep 3; }
 pgrep -cf cron.php &>/dev/null && { echo "cron.php running. Abort"; exit 1; }
 mysql nextcloud <<<"UPDATE oc_jobs SET reserved_at=0;"
@@ -94,7 +91,7 @@ LIMIT=0
 
 echo "Back up current instance..."
 set +eE
-ncp-backup "$BKPDIR" "$WITH_DATA" "$COMPRESSED" "$LIMIT" # && false # test point
+nettserver-backup "$BKPDIR" "$WITH_DATA" "$COMPRESSED" "$LIMIT" # && false # test point
 RET=$?
 sync
 set -eE
@@ -159,9 +156,9 @@ rollback() {
   echo -e "Abort\nClean up..."
   rm -rf /var/www/nextcloud.tar.bz2 "$BASEDIR"/nextcloud-old
   echo "Rolling back to backup $BKP..."
-  local TMPDATA="$( mktemp -d "/var/www/ncp-data.XXXXXX" )" || { echo "Failed to create temp dir" >&2; exit 1; }
+  local TMPDATA="$( mktemp -d "/var/www/nettserver-data.XXXXXX" )" || { echo "Failed to create temp dir" >&2; exit 1; }
   [[ "$DATADIR" == "$BASEDIR/nextcloud/data" ]] && mv -T "$DATADIR" "$TMPDATA"
-  ncp-restore "$BKP" || { echo "Rollback failed! Data left at $TMPDATA"; exit 1; }
+  nettserver-restore "$BKP" || { echo "Rollback failed! Data left at $TMPDATA"; exit 1; }
   [[ "$DATADIR" == "$BASEDIR/nextcloud/data" ]] && { rm -rf "$DATADIR"; mv -T "$TMPDATA" "$DATADIR"; }
   rm "$BKP"
   echo "Rollback successful. Nothing was updated"
@@ -184,8 +181,8 @@ sudo -u www-data php nextcloud/occ db:add-missing-indices
 
 # done
 ####################
-mkdir -p  "$DATADIR"/ncp-update-backups
-mv "$BKP" "$DATADIR"/ncp-update-backups
-chown -R www-data:www-data "$DATADIR"/ncp-update-backups
-BKP="$DATADIR"/ncp-update-backups/"$( basename "$BKP" )"
+mkdir -p  "$DATADIR"/nettserver-update-backups
+mv "$BKP" "$DATADIR"/nettserver-update-backups
+chown -R www-data:www-data "$DATADIR"/nettserver-update-backups
+BKP="$DATADIR"/nettserver-update-backups/"$( basename "$BKP" )"
 echo "Backup stored at $BKP"
