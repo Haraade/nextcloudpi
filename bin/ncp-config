@@ -1,33 +1,31 @@
 #!/bin/bash
 
-# NextCloudPi software configuration
+# NETTSERVER software configuration
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 # Usage:
-#   sudo ncp-config
+# sudo nettserver-config
 #
-# More at https://ownyourbits.com/2017/03/13/nextcloudpi-gets-nextcloudpi-config/
 #
 
-BINDIR=/usr/local/bin/ncp
+BINDIR=/usr/local/bin/nettserver
 
 source /usr/local/etc/library.sh
 {
-  latest_ver="$(cat /var/run/.ncp-latest-version)"
-  ncpversion="$(cat /usr/local/etc/ncp-version  )"
-  chlogfile=/usr/local/etc/ncp-changelog
+  latest_ver="$(cat /var/run/.nettserver-latest-version)"
+  nettserverversion="$(cat /usr/local/etc/nettserver-version  )"
+  chlogfile=/usr/local/etc/nettserver-changelog
   # ask for update if outdated
-  ncp-test-updates 2>/dev/null && {
+  nettserver-test-updates 2>/dev/null && {
     [[ -f "$chlogfile" ]] && changelog=$( head -4 "$chlogfile" )
 
-    whiptail --backtitle "$backtitle $ncpversion" \
-             --title "NextCloudPi update available" \
+    whiptail --backtitle "$backtitle $nettserverversion" \
+             --title "NETTSERVER update available" \
              --clear --yesno "Update to $latest_ver?\n\n$changelog" \
              15 70
 
-    [[ $? -eq $dialog_ok ]] && ncp-update
+    [[ $? -eq $dialog_ok ]] && nettserver-update
   }
 
 function generate_list()
@@ -45,7 +43,7 @@ function generate_list()
 
     [[ "$item" =~ ".sh" ]] || continue
 
-    # regular ncp_apps
+    # regular nettserver_apps
     local app="$( basename "$item" .sh )"
     local cfg="$cfgdir/$app".cfg
 
@@ -59,11 +57,11 @@ function generate_list()
 function config_menu()
 {
   local dir="$1"
-  local backtitle="NextCloudPi configuration ver. "
-  local ncpversion="$(cat /usr/local/etc/ncp-version  )"
-  local cfgdir=/usr/local/etc/ncp-config.d
+  local backtitle="NETTSERVER configuration ver. "
+  local ncpversion="$(cat /usr/local/etc/nettserver-version  )"
+  local cfgdir=/usr/local/etc/nettserver-config.d
   local dialog_ok=0
-  local desc cfg ncp_app
+  local desc cfg nettserver_app
 
   while true; do
 
@@ -72,33 +70,33 @@ function config_menu()
 
     # launch the selection menu
     [[ "$dir" == "$BINDIR" ]] && local cancel_btn="Finish" || local cancel_btn="Back"
-    ncp_app=$( whiptail --backtitle "$backtitle $ncpversion" \
-                       --title "NextCloudPi Configuration Tool (ncp-config)" \
+    nettserver_app=$( whiptail --backtitle "$backtitle $nettserverversion" \
+                       --title "NETTSERVER Configuration Tool (nettserver-config)" \
                        --cancel-button $cancel_btn --ok-button Select \
-                       --menu "Select ncp-app to configure or activate:" 20 105 10 \
+                       --menu "Select nettserver-app to configure or activate:" 20 105 10 \
                        "${list[@]}" \
               3>&1 1>&2 2>&3 )
 
-    [[ $? -ne $dialog_ok ]] || [[ "$ncp_app" == "" ]] && {
+    [[ $? -ne $dialog_ok ]] || [[ "$nettserver_app" == "" ]] && {
       [[ "$dir" == "$BINDIR" ]] && return 0
       dir="$(dirname "$dir")"
       continue
     }
 
     # remove * and spaces
-    ncp_app=$( sed  's=*\| ==g' <<< "$ncp_app" )
+    nettserver_app=$( sed  's=*\| ==g' <<< "$nettserver_app" )
 
     # directory selection
-    [[ -d "$dir/$ncp_app" ]] && {
-      dir="$dir/$ncp_app"
+    [[ -d "$dir/$nettserver_app" ]] && {
+      dir="$dir/$nettserver_app"
       config_menu "$dir"
       return
     }
 
     # launch selected ncp_app
-    info_app      "$ncp_app" || continue
-    configure_app "$ncp_app" && \
-    run_app       "$ncp_app"
+    info_app      "$nettserver_app" || continue
+    configure_app "$nettserver_app" && \
+    run_app       "$nettserver_app"
     echo "Done. Press any key..."
     read -r
   done
