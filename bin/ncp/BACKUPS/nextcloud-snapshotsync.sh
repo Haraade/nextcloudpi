@@ -2,12 +2,8 @@
 
 # Sync Nextcloud BTRFS snapshots
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
-#
-
 
 install()
 {
@@ -21,7 +17,7 @@ install()
 configure()
 {
   [[ $ACTIVE != "yes" ]] && { 
-    rm -f /etc/cron.d/ncp-snapsync-auto
+    rm -f /etc/cron.d/nettserver-snapsync-auto
     service cron restart
     echo "snapshot sync disabled"
     return 0
@@ -43,8 +39,8 @@ configure()
 
   [[ "$COMPRESSION" == "yes" ]] && ZIP="-z"
 
-  echo "30  4  */${SYNCDAYS}  *  *  root  /usr/local/bin/btrfs-sync -qd $ZIP \"$SNAPDIR\" \"$DESTINATION\"" > /etc/cron.d/ncp-snapsync-auto
-  chmod 644 /etc/cron.d/ncp-snapsync-auto
+  echo "30  4  */${SYNCDAYS}  *  *  root  /usr/local/bin/btrfs-sync -qd $ZIP \"$SNAPDIR\" \"$DESTINATION\"" > /etc/cron.d/nettserver-snapsync-auto
+  chmod 644 /etc/cron.d/nettserver-snapsync-auto
   service cron restart
   echo "snapshot sync enabled"
 }
