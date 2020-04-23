@@ -1,7 +1,13 @@
 
-[v1.24.0](https://github.com/nextcloud/nextcloudpi/commit/b7afa52) (2020-03-24) upgrade to NC18.0.3
+[v1.24.3](https://github.com/nextcloud/nextcloudpi/commit/d6a8d3d) (2020-04-18) ncp-web: cache backup info
 
-[v1.23.2](https://github.com/nextcloud/nextcloudpi/commit/0a97f77) (2020-03-22) lamp: disable old TLS versions
+[v1.24.2 ](https://github.com/nextcloud/nextcloudpi/commit/ff565d6) (2020-04-06) build: small tweaks
+
+[v1.24.1 ](https://github.com/nextcloud/nextcloudpi/commit/ae6c88f) (2020-04-06) nc-backup-auto: fix notify_admin
+
+[v1.24.0 ](https://github.com/nextcloud/nextcloudpi/commit/a3dbec1) (2020-03-24) upgrade to NC18.0.3
+
+[v1.23.2 ](https://github.com/nextcloud/nextcloudpi/commit/0a97f77) (2020-03-22) lamp: disable old TLS versions
 
 [v1.23.1 ](https://github.com/nextcloud/nextcloudpi/commit/84e6b4e) (2020-03-15) ncp-web: check for possibly missing index
 
