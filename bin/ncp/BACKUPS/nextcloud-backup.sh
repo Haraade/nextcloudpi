@@ -1,10 +1,8 @@
 #!/bin/bash
 # Nextcloud backups
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - see end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
 
 install()
@@ -12,11 +10,11 @@ install()
   apt-get update
   apt-get install -y --no-install-recommends pigz
 
-  cat > /usr/local/bin/ncp-backup <<'EOF'
+  cat > /usr/local/bin/nettserver-backup <<'EOF'
 #!/bin/bash
 set -eE
 
-destdir="${1:-/media/USBdrive/ncp-backups}"
+destdir="${1:-/media/nextcloud/nettserver-backups}"
 includedata="${2:-no}"
 compress="${3:-no}"
 backuplimit="${4:-0}"
@@ -85,7 +83,7 @@ tar $compress_arg -cf "$destfile" \
     --exclude "$data/.opcache" \
     --exclude "$data/{access,error,nextcloud}.log" \
     --exclude "$data/access.log" \
-    --exclude "$data/ncp-update-backups" \
+    --exclude "$data/nettserver-update-backups" \
     -C "$(dirname "$datadir"/)" $data \
 \
     --exclude "nextcloud/data/*/files/*" \
@@ -97,7 +95,7 @@ tar $compress_arg -cf "$destfile" \
     --exclude "nextcloud/data/*/cache/*" \
     --exclude "nextcloud/data/*/files_trashbin/*" \
     --exclude "nextcloud/data/*/files_versions/*" \
-    --exclude "nextcloud/data/ncp-update-backups" \
+    --exclude "nextcloud/data/nettserver-update-backups" \
     --exclude "nextcloud/data/__groupfolders" \
     -C $basedir nextcloud/ \
   || {
@@ -110,12 +108,12 @@ chown :www-data "$destfile"
 
 echo "backup $destfile generated"
 EOF
-  chmod +x /usr/local/bin/ncp-backup
+  chmod +x /usr/local/bin/nettserver-backup
 }
 
 configure()
 {
-  ncp-backup "$DESTDIR" "$INCLUDEDATA" "$COMPRESS" "$BACKUPLIMIT"
+  nettserver-backup "$DESTDIR" "$INCLUDEDATA" "$COMPRESS" "$BACKUPLIMIT"
 }
 
 # License
