@@ -1,15 +1,13 @@
 #!/bin/bash
 
 #
-# NextCloudPi configuration suggestions
+# NETTSERVER configuration suggestions
 #
-# Copyleft 2018 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 # Usage:
-#   sudo ncp-suggestions "$( ncp-diag )"
+# sudo nettserver-suggestions "$( nettserver-diag )"
 #
-# More at https://ownyourbits.com
 #
 
 OUT="$@"
@@ -17,11 +15,11 @@ OUT="$@"
 source /usr/local/etc/library.sh
   
 check_distro || \
-  echo -e "You are using an outdated distro release. You should upgrade to latest Debian/Raspbian"
+  echo -e "You are using an outdated distro release. You should upgrade to latest Debian"
 
 is_active_app dnsmasq && \
   grep -q "NAT loopback|no" <<<"$OUT" && \
-    echo -e "\nYou should enable dnsmasq to use your domain inside home"
+    echo -e "\nYou should enable dnsmasq to use your domain inside localnet"
 
 grep -q "certificates|none" <<<"$OUT" && \
   echo -e "\nYou should run Lets Encrypt for trusted encrypted access"
