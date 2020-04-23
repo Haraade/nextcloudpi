@@ -2,11 +2,8 @@
 
 # Activate/deactivate SSH
 #
+# GPL licensed - end of file
 #
-# Copyleft 2017 by Courtney Hicks and Ignacio Nunez Hernanz
-# GPL licensed (see end of file) * Use at your own risk!
-#
-
 
 install() { :; }
 
@@ -24,35 +21,9 @@ configure()
     return 0
   }
 
-  # Check for bad ideas
-  [[ "$USER" == "pi" ]] && [[ "$PASS" == "raspberry" ]] && {
-    echo "Refusing to use the default Raspbian user and password. It's insecure"
-    return 1
-  }
   [[ "$USER" == "root" ]] && [[ "$PASS" == "1234" ]] && {
     echo "Refusing to use the default Armbian user and password. It's insecure"
     return 1
-  }
-
-  # Change credentials
-  id "$USER" &>/dev/null || { echo "$USER doesn't exist"; return 1; }
-  echo -e "$PASS\n$CONFIRM" | passwd "$USER" || return 1
-
-  # Check for insecure default pi password ( taken from old jessie method )
-  local SHADOW="$( grep -E '^pi:' /etc/shadow )"
-  test -n "${SHADOW}" && {
-    local SALT=$(echo "${SHADOW}" | sed -n 's/pi:\$6\$//;s/\$.*//p')
-
-    [[ "${SALT}" != "" ]] && {
-      local HASH=$(mkpasswd -msha-512 raspberry "$SALT")
-      grep -q "${HASH}" <<< "${SHADOW}" && {
-        systemctl stop    ssh
-        systemctl disable ssh
-        echo "The user pi is using the default password. Refusing to activate SSH"
-        echo "SSH disabled"
-        return 1
-      }
-    }
   }
 
   # Check for insecure default root password ( taken from old jessie method )
