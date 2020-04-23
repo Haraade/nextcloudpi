@@ -1,16 +1,13 @@
 #!/bin/bash
 
-# Let's encrypt certbot installation on NextCloudPi
+# Let's encrypt certbot installation
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/03/17/lets-encrypt-installer-for-apache/
-
 
 ncdir=/var/www/nextcloud
 vhostcfg=/etc/apache2/sites-available/nextcloud.conf
-vhostcfg2=/etc/apache2/sites-available/ncp.conf
+vhostcfg2=/etc/apache2/sites-available/nettserver.conf
 letsencrypt=/usr/bin/letsencrypt
 
 is_active()
@@ -65,7 +62,7 @@ configure()
   $letsencrypt certonly -n --force-renew --no-self-upgrade --webroot -w $ncdir --hsts --agree-tos -m $EMAIL -d $domain_string && {
 
     # Set up auto-renewal
-    cat > /etc/cron.weekly/letsencrypt-ncp <<EOF
+    cat > /etc/cron.weekly/letsencrypt-nettserver <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
 
@@ -80,10 +77,10 @@ $letsencrypt renew --quiet
 # cleanup
 rm -rf $ncdir/.well-known
 EOF
-    chmod 755 /etc/cron.weekly/letsencrypt-ncp
+    chmod 755 /etc/cron.weekly/letsencrypt-nettserver
 
     mkdir -p /etc/letsencrypt/renewal-hooks/deploy
-    cat > /etc/letsencrypt/renewal-hooks/deploy/ncp <<EOF
+    cat > /etc/letsencrypt/renewal-hooks/deploy/nettserver <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
 notify_admin \
@@ -91,7 +88,7 @@ notify_admin \
   "Your SSL certificate(s) \$RENEWED_DOMAINS has been renewed for another 90 days"
 exit 0
 EOF
-    chmod +x /etc/letsencrypt/renewal-hooks/deploy/ncp
+    chmod +x /etc/letsencrypt/renewal-hooks/deploy/nettserver
 
     # Configure Apache
     sed -i "s|SSLCertificateFile.*|SSLCertificateFile /etc/letsencrypt/live/$DOMAIN_LOWERCASE/fullchain.pem|" $vhostcfg
