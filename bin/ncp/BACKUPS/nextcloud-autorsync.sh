@@ -2,10 +2,7 @@
 
 # Periodically sync Nextcloud datafolder through rsync
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
-#
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
+# GPL licensed - end of file
 #
 
 install()
@@ -17,7 +14,7 @@ install()
 configure()
 {
   [[ $ACTIVE != "yes" ]] && { 
-    rm -f /etc/cron.d/ncp-rsync-auto
+    rm -f /etc/cron.d/nettserver-rsync-auto
     echo "automatic rsync disabled"
     return 0
   }
@@ -36,8 +33,8 @@ configure()
     ${SSH[@]} echo || { echo "SSH non-interactive not properly configured"; return 1; }
   }
 
-  echo "0  5  */${SYNCDAYS}  *  *  root  /usr/bin/rsync -ax -e \"ssh -p $PORTNUMBER\" --delete \"$DATADIR\" \"$DESTINATION\"" > /etc/cron.d/ncp-rsync-auto
-  chmod 644 /etc/cron.d/ncp-rsync-auto
+  echo "0  5  */${SYNCDAYS}  *  *  root  /usr/bin/rsync -ax -e \"ssh -p $PORTNUMBER\" --delete \"$DATADIR\" \"$DESTINATION\"" > /etc/cron.d/nettserver-rsync-auto
+  chmod 644 /etc/cron.d/nettserver-rsync-auto
   service cron restart
 
   echo "automatic rsync enabled"
