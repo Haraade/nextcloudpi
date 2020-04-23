@@ -1,19 +1,17 @@
 #!/bin/bash
 
-# NextCloudPi diagnostics report
+# NETTSERVER diagnostics report
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 # Usage:
-#   sudo ncp-diag
+# sudo nettserver-diag
 #
-# More at https://ownyourbits.com
 #
 
-# Distro, NCP version and tag
-echo "NextCloudPi version|$( cat /usr/local/etc/ncp-version )"
-[[ -f /usr/local/etc/ncp-baseimage ]] && echo "NextCloudPi image|$( cat /usr/local/etc/ncp-baseimage )"
+# Distro, NETTSERVER version and tag
+echo "NETTSERVER version|$( cat /usr/local/etc/nettserver-version )"
+[[ -f /usr/local/etc/nettserver-baseimage ]] && echo "NETTSERVER image|$( cat /usr/local/etc/nettserver-baseimage )"
 echo "distribution|$( cat /etc/issue )"
 
 # Data
@@ -23,7 +21,7 @@ test -d "$DATADIR" || DIRINFO=" (doesn't exist)"
 USBDEVS="$( lsblk -S -o  NAME,TRAN | awk '{ if ( $2 == "usb" ) print $1; }' | tr '\n' ' ' )"
 [[ "$USBDEVS" == "" ]] && USBDEVS="none"
 
-am_cfg="/usr/local/etc/ncp-config.d/nc-automount.cfg"
+am_cfg="/usr/local/etc/nettserver-config.d/automount.cfg"
 [[ -f "$am_cfg" ]] && [[ "$(jq -r ".params[0].value" "$am_cfg")" == "yes" ]] && echo "automount|yes" || echo "automount|no"
 echo "USB devices|$USBDEVS"
 echo "datadir|$DATADIR$DIRINFO"
@@ -38,7 +36,7 @@ SWP="$( swapon | tail -1 | awk '{ print $1 }' )"
 echo "swapfile|$SWP"
 
 # Database
-DBDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-ncp.cnf | awk -F "= " '{ print $2 }' )
+DBDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-nettserver.cnf | awk -F "= " '{ print $2 }' )
 test -d "$DBDIR" || DBDIRINFO=" (doesn't exist)"
 echo "dbdir|$DBDIR$DBDIRINFO"
 
