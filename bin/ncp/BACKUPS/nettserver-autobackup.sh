@@ -1,36 +1,34 @@
 #!/bin/bash
 # Nextcloud backups
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
 
 configure()
 {
   [[ $ACTIVE != "yes" ]] && {
-    rm -f /etc/cron.d/ncp-backup-auto
+    rm -f /etc/cron.d/nettserver-backup-auto
     service cron restart
     echo "automatic backups disabled"
     return 0
   }
 
-  cat > /usr/local/bin/ncp-backup-auto <<EOF
+  cat > /usr/local/bin/nettserver-backup-auto <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
-[ -x /usr/local/bin/ncp-backup-auto-before ] && /usr/local/bin/ncp-backup-auto-before
+[ -x /usr/local/bin/nettserver-backup-auto-before ] && /usr/local/bin/nettserver-backup-auto-before
 /usr/local/bin/ncc maintenance:mode --on
-/usr/local/bin/ncp-backup "$DESTDIR" "$INCLUDEDATA" "$COMPRESS" "$BACKUPLIMIT" || failed=true
+/usr/local/bin/nettserver-backup "$DESTDIR" "$INCLUDEDATA" "$COMPRESS" "$BACKUPLIMIT" || failed=true
 /usr/local/bin/ncc maintenance:mode --off
 [[ "\$failed" == "true" ]] && \
  notify_admin "Auto-backup failed" "Your automatic backup failed"
-[ -x /usr/local/bin/ncp-backup-auto-after ] && /usr/local/bin/ncp-backup-auto-after
+[ -x /usr/local/bin/nettserver-backup-auto-after ] && /usr/local/bin/nettserver-backup-auto-after
 EOF
-  chmod +x /usr/local/bin/ncp-backup-auto
+  chmod +x /usr/local/bin/nettserver-backup-auto
 
-  echo "0  3  */${BACKUPDAYS}  *  *  root  /usr/local/bin/ncp-backup-auto" > /etc/cron.d/ncp-backup-auto
-  chmod 644 /etc/cron.d/ncp-backup-auto
+  echo "0  3  */${BACKUPDAYS}  *  *  root  /usr/local/bin/nettserver-backup-auto" > /etc/cron.d/nettserver-backup-auto
+  chmod 644 /etc/cron.d/nettserver-backup-auto
   service cron restart
 
   echo "automatic backups enabled"
