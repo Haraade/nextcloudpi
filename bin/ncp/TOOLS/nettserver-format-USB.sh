@@ -2,10 +2,8 @@
 
 # Format a USB external drive as a unique BTRFS partition
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
 
 
@@ -24,7 +22,7 @@ configure()
   killall -STOP udiskie 2>/dev/null
 
   # umount if mounted
-  umount /media/USBdrive* &> /dev/null
+  umount /media/nextcloud* &> /dev/null
 
   # check still not mounted
   for dir in $( ls -d /media/* 2>/dev/null ); do
