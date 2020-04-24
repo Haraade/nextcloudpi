@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# HTTPS rewrite configuration script for NextCloudPi
+# HTTPS rewrite configuration script for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/03/13/nextcloudpi-gets-nextcloudpi-config/
 #
-
 
 configure()
 {
