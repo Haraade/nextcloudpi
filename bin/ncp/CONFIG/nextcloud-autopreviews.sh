@@ -2,19 +2,18 @@
 
 # Periodically generate previews for the gallery
 #
-# Copyleft 2019 by Timo Stiefel and Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
 
 isactive()
 {
-  [[ -f "/etc/cron.d/nc-previews-auto" ]]
+  [[ -f "/etc/cron.d/nettserver-previews-auto" ]]
 }
 
 configure()
 {
   [[ "$ACTIVE" != "yes" ]] && {
-    rm -f /etc/cron.d/nc-previews-auto
+    rm -f /etc/cron.d/nettserver-previews-auto
     service cron restart
     echo "Automatic preview generation disabled"
     return 0
@@ -23,18 +22,18 @@ configure()
   grep -qP "^\d+$" <<<"$RUNTIME" || { echo "Invalid RUNTIME value $RUNTIME"; return 1; }
   RUNTIME=$((RUNTIME*60))
 
-  echo "0  2  *  *  *  root  /usr/local/bin/nc-previews" >  /etc/cron.d/ncp-previews-auto
-  chmod 644 /etc/cron.d/ncp-previews-auto
+  echo "0  2  *  *  *  root  /usr/local/bin/nextcloud-previews" >  /etc/cron.d/nettserver-previews-auto
+  chmod 644 /etc/cron.d/nettserver-previews-auto
 
-  cat > /usr/local/bin/nc-previews <<EOF
+  cat > /usr/local/bin/nextcloud-previews <<EOF
 #!/bin/bash
-echo -e "\n[ nc-previews-auto ]" >> /var/log/ncp.log
+echo -e "\n[ nc-previews-auto ]" >> /var/log/nettserver.log
 (
     for i in \$(seq 1 \$(nproc)); do
       ionice -c3 nice -n20 /usr/local/bin/ncc preview:pre-generate -n -vvv &
     done
     wait
-) 2>&1 >>/var/log/ncp.log &
+) 2>&1 >>/var/log/nettserver.log &
 
 PID=\$!
 [[ "$RUNTIME" != 0 ]] && {
@@ -46,7 +45,7 @@ PID=\$!
 }
 wait "\$PID"
 EOF
-chmod +x /usr/local/bin/nc-previews
+chmod +x /usr/local/bin/nextcloud-previews
 
   service cron restart
   echo "Automatic preview generation enabled"
