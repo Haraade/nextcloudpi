@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Monitor HDD health automatically
+# Monitor NETTSERVER HDD health automatically
 #
-# Copyleft 2018 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com
 #
-
 
 
 is_active()
@@ -30,12 +27,12 @@ configure()
     return 0
   }
 
-  cat > /usr/local/etc/ncp-hdd-notif.sh <<EOF
+  cat > /usr/local/etc/nettserver-hdd-notif.sh <<EOF
 #!/bin/bash
 EOF
 
   [[ "$EMAIL" != "" ]] && {
-    cat >> /usr/local/etc/ncp-hdd-notif.sh <<EOF
+    cat >> /usr/local/etc/nettserver-hdd-notif.sh <<EOF
 sendmail "$EMAIL" <<EOFMAIL
 Subject: Hard drive problems found
 
@@ -44,17 +41,17 @@ EOFMAIL
 EOF
   }
 
-  cat >> /usr/local/etc/ncp-hdd-notif.sh <<EOF
+  cat >> /usr/local/etc/nettserver-hdd-notif.sh <<EOF
 source /usr/local/etc/library.sh
 wall "\$SMARTD_MESSAGE"
 notify_admin \
-  "NextCloudPi HDD health \$SMARTD_FAILTYPE" \
+  "NETTSERVER HDD health \$SMARTD_FAILTYPE" \
   "\$SMARTD_MESSAGE"
 EOF
-chmod +x /usr/local/etc/ncp-hdd-notif.sh
+chmod +x /usr/local/etc/nettserver-hdd-notif.sh
 
   cat > /etc/smartd.conf <<EOF
-# short scan every day at 1am, long one on sundays at 2am
+# short scan every day at 16, long one on sundays at 16
 EOF
 
   for dr in "${DRIVES[@]}"; do
@@ -65,7 +62,7 @@ EOF
     smartctl ${type} --smart=on /dev/${dr} | sed 1,2d;
 
     cat >> /etc/smartd.conf <<EOF
-/dev/${dr} -a ${type} -m ${EMAIL} -M exec /usr/local/etc/ncp-hdd-notif.sh -s (S/../.././01|L/../../7/02)
+/dev/${dr} -a ${type} -m ${EMAIL} -M exec /usr/local/etc/nettserver-hdd-notif.sh -s (S/../.././16|L/../../7/16)
 EOF
 
   done
