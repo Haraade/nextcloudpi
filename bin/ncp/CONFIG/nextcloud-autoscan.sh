@@ -2,18 +2,14 @@
 
 # Periodically synchronize NextCloud for externally modified files
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
-
-
 
 configure()
 {
     [[ $ACTIVE != "yes" ]] && {
-    rm -f /etc/cron.d/ncp-scan-auto
+    rm -f /etc/cron.d/nettserver-scan-auto
     service cron restart
     echo "automatic scans disabled"
     return 0
@@ -35,11 +31,11 @@ configure()
   [[ "$RECURSIVE"   == no  ]] && local recursive=--shallow
   [[ "$NONEXTERNAL" == yes ]] && local non_external=--home-only
 
-  cat > /usr/local/bin/ncp-scan-auto <<EOF
+  cat > /usr/local/bin/nettserver-scan-auto <<EOF
 #!/bin/bash
 (
 
-  echo -e "\n[ nc-scan-auto ]"
+  echo -e "\n[ nextcloud-autoscan ]"
 
   [[ "$PATH1" != "" ]] && /usr/local/bin/ncc files:scan $recursive $non_external -n -p "$PATH1"
   [[ "$PATH2" != "" ]] && /usr/local/bin/ncc files:scan $recursive $non_external -n -p "$PATH2"
@@ -47,12 +43,12 @@ configure()
 
   [[ "${PATH1}${PATH2}${PATH3}" == "" ]] && /usr/local/bin/ncc files:scan $recursive $non_external -n --all
 
-) 2>&1 >>/var/log/ncp.log
+) 2>&1 >>/var/log/nettserver.log
 EOF
-chmod +x /usr/local/bin/ncp-scan-auto
+chmod +x /usr/local/bin/nettserver-scan-auto
 
-  echo "${mins}  ${hour}  ${days}  *  *  root /usr/local/bin/ncp-scan-auto" > /etc/cron.d/ncp-scan-auto
-  chmod 644 /etc/cron.d/ncp-scan-auto
+  echo "${mins}  ${hour}  ${days}  *  *  root /usr/local/bin/nettserver-scan-auto" > /etc/cron.d/nettserver-scan-auto
+  chmod 644 /etc/cron.d/nettserver-scan-auto
   service cron restart
 
   echo "automatic scans enabled"
