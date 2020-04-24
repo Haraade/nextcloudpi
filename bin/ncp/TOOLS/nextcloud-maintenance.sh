@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Turn maintenance mode on or off
+# Turn nextcloud maintenance mode on or off
 #
-# Copyleft 2019 by Yi Chi 齊一 <chiyi4869 _a_t_ gmail _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://www.cotpear.com
-# Made in Taiwan (Republic of China)
 #
 
 is_active()
