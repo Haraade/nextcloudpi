@@ -2,10 +2,8 @@
 
 # Init NextCloud database and perform initial configuration
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
 
 DBADMIN=ncadmin
@@ -14,7 +12,7 @@ configure()
 {
   source /usr/local/etc/library.sh # sets PHPVER
 
-  echo "Setting up a clean Nextcloud instance... wait until message 'NC init done'"
+  echo "Setting up a clean Nextcloud instance... wait until message 'nextclod init done'"
 
   # checks
   local REDISPASS=$( grep "^requirepass" /etc/redis/redis.conf  | cut -d' ' -f2 )
@@ -109,18 +107,16 @@ EOF
   test -f /usr/local/bin/nextcloud-domain.sh && {
     test -f /.ncp-image || bash /usr/local/bin/nextcloud-domain.sh
   }
-  ncc config:system:set trusted_domains 5 --value="nextcloudpi.local"
+  ncc config:system:set trusted_domains 5 --value="nettserver.local"
   # trusted_domains 6 used by docker
-  ncc config:system:set trusted_domains 7 --value="nextcloudpi"
-  ncc config:system:set trusted_domains 8 --value="nextcloudpi.lan"
 
   # email
   ncc config:system:set mail_smtpmode     --value="sendmail"
   ncc config:system:set mail_smtpauthtype --value="LOGIN"
   ncc config:system:set mail_from_address --value="admin"
-  ncc config:system:set mail_domain       --value="ownyourbits.com"
+  ncc config:system:set mail_domain       --value="example.com"
 
-  # NCP theme
+  # NETTSERVER theme
   [[ -e /usr/local/etc/logo ]] && {
     local ID=$( grep instanceid config/config.php | awk -F "=> " '{ print $2 }' | sed "s|[,']||g" )
     [[ "$ID" == "" ]] && { echo "failed to get ID"; return 1; }
@@ -132,17 +128,17 @@ EOF
   }
 
   mysql nextcloud <<EOF
-replace into  oc_appconfig values ( 'theming', 'name'          , "NextCloudPi"             );
-replace into  oc_appconfig values ( 'theming', 'slogan'        , "keep your data close"    );
-replace into  oc_appconfig values ( 'theming', 'url'           , "https://ownyourbits.com" );
+replace into  oc_appconfig values ( 'theming', 'name'          , "nettserver"             );
+replace into  oc_appconfig values ( 'theming', 'slogan'        , "private cloud"    );
+replace into  oc_appconfig values ( 'theming', 'url'           , "https://nettserver" );
 replace into  oc_appconfig values ( 'theming', 'logoMime'      , "image/svg+xml"           );
 replace into  oc_appconfig values ( 'theming', 'backgroundMime', "image/png"               );
 EOF
 
-  # NCP app
-  cp -r /var/www/ncp-app /var/www/nextcloud/apps/nextcloudpi
-  chown -R www-data:     /var/www/nextcloud/apps/nextcloudpi
-  ncc app:enable nextcloudpi
+  # NETTSERVER app
+  cp -r /var/www/nettserver-app /var/www/nextcloud/apps/nettserver
+  chown -R www-data:     /var/www/nextcloud/apps/nettserver
+  ncc app:enable nettserver
 
   # enable some apps by default
   ncc app:install calendar
@@ -157,8 +153,8 @@ EOF
   ncc app:enable tasks
   ncc app:enable news
 
-  # ncp-previewgenerator
-  cp -r /var/www/ncp-previewgenerator /var/www/nextcloud/apps/previewgenerator
+  # nettserver-previewgenerator
+  cp -r /var/www/nettserver-previewgenerator /var/www/nextcloud/apps/previewgenerator
   ncc app:enable previewgenerator
   chown www-data:www-data /var/www/nextcloud/apps/previewgenerator
 
@@ -173,12 +169,10 @@ EOF
 
   # other
   ncc config:system:set overwriteprotocol --value=https
-
-  # TODO temporary workaround for https://github.com/nextcloud/server/pull/13358
   ncc -n db:convert-filecache-bigint
   ncc db:add-missing-indices
 
-  echo "NC init done"
+  echo "nextclod init done"
 }
 
 install(){ :; }
