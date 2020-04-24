@@ -2,12 +2,9 @@
 
 # Uncomplicated Firewall
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
-
 
 
 install()
@@ -36,24 +33,18 @@ configure()
   systemctl start ufw
 
   echo -e "\n# web server rules"
-  ufw allow $HTTP/tcp
-  ufw allow $HTTPS/tcp
+  ufw allow 80/tcp
+  ufw allow 443/tcp
   ufw allow 4443/tcp
 
   echo -e "\n# SSH rules"
-  ufw allow $SSH
+  ufw allow 22
 
   echo -e "\n# DNS rules"
-  ufw allow dns
+  ufw allow 53
 
-  echo -e "\n# SAMBA rules"
-  ufw allow samba
-
-  echo -e "\n# NFS rules"
-  ufw allow nfs
-
-  echo -e "\n# UPnP rules"
-  ufw allow proto udp from 192.168.0.0/16
+  #echo -e "\n# UPnP rules"
+  #ufw allow proto udp from 192.168.0.0/16
 
   echo "UFW enabled"
 }
