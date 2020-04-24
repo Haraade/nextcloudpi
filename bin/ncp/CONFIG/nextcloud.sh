@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Nextcloud installation on Raspbian over LAMP base
+# Nextcloud installation - LAMP base
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
 
 DBADMIN=ncadmin
@@ -16,8 +14,8 @@ export DEBIAN_FRONTEND=noninteractive
 
 install()
 {
-  # During build, this step is run before ncp.sh. Avoid executing twice
-  [[ -f /usr/lib/systemd/system/nc-provisioning.service ]] && return 0
+  # During build, this step is run before nettserver.sh. Avoid executing twice
+  [[ -f /usr/lib/systemd/system/nextcloud-provisioning.service ]] && return 0
 
   source /usr/local/etc/library.sh # sets PHPVER RELEASE
 
@@ -32,8 +30,8 @@ install()
 
   # POSTFIX
   $APTINSTALL postfix || {
-    # [armbian] workaround for bug - https://bugs.launchpad.net/ubuntu/+source/postfix/+bug/1531299
-    echo "[NCP] Please, ignore the previous postfix installation error ..."
+    # [armbian] workaround for bug.
+    echo "[NETTSERVER] Please, ignore the previous postfix installation error ..."
     mv /usr/bin/newaliases /
     ln -s /bin/true /usr/bin/newaliases
     $APTINSTALL postfix
@@ -64,14 +62,14 @@ install()
 
   # service to randomize passwords on first boot
   mkdir -p /usr/lib/systemd/system
-  cat > /usr/lib/systemd/system/nc-provisioning.service <<'EOF'
+  cat > /usr/lib/systemd/system/nextcloud-provisioning.service <<'EOF'
 [Unit]
 Description=Randomize passwords on first boot
 Requires=network.target
 After=mysql.service redis.service
 
 [Service]
-ExecStart=/bin/bash /usr/local/bin/ncp-provisioning.sh
+ExecStart=/bin/bash /usr/local/bin/nextcloud-provisioning.sh
 
 [Install]
 WantedBy=multi-user.target
@@ -178,8 +176,8 @@ EOF
 <IfModule mod_ssl.c>
   <VirtualHost _default_:443>
     DocumentRoot /var/www/nextcloud
-    CustomLog /var/log/apache2/nc-access.log combined
-    ErrorLog  /var/log/apache2/nc-error.log
+    CustomLog /var/log/apache2/nextcloud-access.log combined
+    ErrorLog  /var/log/apache2/nextcloud-error.log
     SSLEngine on
     SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
     SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
@@ -215,7 +213,7 @@ EOF
   echo "Setting up system..."
 
   ## SET LIMITS
-  cat > /etc/php/${PHPVER}/fpm/conf.d/90-ncp.ini <<EOF
+  cat > /etc/php/${PHPVER}/fpm/conf.d/90-nettserver.ini <<EOF
 ; disable .user.ini files for performance and workaround NC update bugs
 user_ini.filename =
 
@@ -238,7 +236,7 @@ EOF
   crontab -u www-data /tmp/crontab_http
   rm /tmp/crontab_http
 
-  echo "Don't forget to run nc-init"
+  echo "Don't forget to run nextcloud-init"
 }
 
 # License
