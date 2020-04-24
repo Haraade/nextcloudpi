@@ -2,17 +2,14 @@
 
 # Generate previews for the gallery
 #
-# Copyleft 2018 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at nextcloudpi.com
 #
-
 
 configure()
 {
   pgrep -af preview:pre-generate &>/dev/null || pgrep -af preview:generate-all &>/dev/null && {
-    echo "nc-previews is already running"
+    echo "nextcloud-previews is already running"
     return 1
   }
 
