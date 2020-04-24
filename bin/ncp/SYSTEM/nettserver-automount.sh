@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Automount configuration for NextCloudPi
+# Automount configuration for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/
 #
 
 
@@ -18,10 +16,10 @@ install()
 ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"
 EOF
 
-  cat > /usr/lib/systemd/system/nc-automount.service <<'EOF'
+  cat > /usr/lib/systemd/system/nettserver-automount.service <<'EOF'
 [Unit]
 Description=Automount USB drives
-Before=mysqld.service dphys-swapfile.service fail2ban.service smbd.service nfs-server.service
+Before=mysqld.service dphys-swapfile.service fail2ban.service
 
 [Service]
 Restart=always
@@ -32,20 +30,20 @@ ExecStart=/usr/bin/udiskie -NTF
 WantedBy=multi-user.target
 EOF
 
-  cat > /usr/lib/systemd/system/nc-automount-links.service <<'EOF'
+  cat > /usr/lib/systemd/system/nettserver-automount-links.service <<'EOF'
 [Unit]
-Description=Monitor /media for mountpoints and create USBdrive* symlinks
+Description=Monitor /media for mountpoints and create nextcloud* symlinks
 Before=nc-automount.service
 
 [Service]
 Restart=always
-ExecStart=/usr/local/etc/nc-automount-links-mon
+ExecStart=/usr/local/etc/nettserver-automount-links-mon
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-  cat > /usr/local/etc/nc-automount-links <<'EOF'
+  cat > /usr/local/etc/nettserver-automount-links <<'EOF'
 #!/bin/bash
 
 ls -d /media/* &>/dev/null && {
@@ -59,69 +57,62 @@ ls -d /media/* &>/dev/null && {
   i=0
   for d in $( ls -d /media/* 2>/dev/null ); do
     if [ $i -eq 0 ]; then
-      test -e /media/USBdrive   || test -d "$d" && ln -sT "$d" /media/USBdrive
+      test -e /media/nextcloud   || test -d "$d" && ln -sT "$d" /media/nextcloud
     else
-      test -e /media/USBdrive$i || test -d "$d" && ln -sT "$d" /media/USBdrive$i
+      test -e /media/nextcloud$i || test -d "$d" && ln -sT "$d" /media/nextcloud$i
     fi
     i=$(( i + 1 ))
   done
 
 }
 EOF
-  chmod +x /usr/local/etc/nc-automount-links
+  chmod +x /usr/local/etc/nettserver-automount-links
 
-  cat > /usr/local/etc/nc-automount-links-mon <<'EOF'
+  cat > /usr/local/etc/nettserver-automount-links-mon <<'EOF'
 #!/bin/bash
 inotifywait --monitor --event create --event delete --format '%f %e' /media/ | \
   grep --line-buffered ISDIR | while read f; do
     echo $f
     sleep 0.5
-    /usr/local/etc/nc-automount-links
+    /usr/local/etc/nettserver-automount-links
 done
 EOF
-  chmod +x /usr/local/etc/nc-automount-links-mon
+  chmod +x /usr/local/etc/nettserver-automount-links-mon
 }
 
 configure()
 {
   [[ $ACTIVE != "yes" ]] && {
-    systemctl stop    nc-automount
-    systemctl stop    nc-automount-links
-    systemctl disable nc-automount
-    systemctl disable nc-automount-links
-    rm -rf /etc/systemd/system/{mariadb,nfs-server,dphys-swapfile,fail2ban}.service.d
+    systemctl stop    nettserver-automount
+    systemctl stop    nettserver-automount-links
+    systemctl disable nettserver-automount
+    systemctl disable nettserver-automount-links
+    rm -rf /etc/systemd/system/{mariadb,dphys-swapfile,fail2ban}.service.d
     systemctl daemon-reload
     echo "automount disabled"
     return 0
   }
-  systemctl enable  nc-automount
-  systemctl enable  nc-automount-links
-  systemctl start   nc-automount
-  systemctl start   nc-automount-links
+  systemctl enable  nettserver-automount
+  systemctl enable  nettserver-automount-links
+  systemctl start   nettserver-automount
+  systemctl start   nettserver-automount-links
 
   # create delays in some units
   mkdir -p /etc/systemd/system/mariadb.service.d
-  cat > /etc/systemd/system/mariadb.service.d/ncp-delay-automount.conf <<'EOF'
+  cat > /etc/systemd/system/mariadb.service.d/nettserver-delay-automount.conf <<'EOF'
 [Service]
 ExecStartPre=/bin/sleep 20
 Restart=on-failure
 EOF
 
-  mkdir -p /etc/systemd/system/nfs-server.service.d
-  cat > /etc/systemd/system/nfs-server.service.d/ncp-delay-automount.conf <<'EOF'
-[Service]
-ExecStartPre=
-ExecStartPre=/bin/bash -c "/bin/sleep 30; /usr/sbin/exportfs -r"
-EOF
-
   mkdir -p /etc/systemd/system/dphys-swapfile.service.d
-  cat > /etc/systemd/system/dphys-swapfile.service.d/ncp-delay-automount.conf <<'EOF'
+  cat > /etc/systemd/system/dphys-swapfile.service.d/nettserver-delay-automount.conf <<'EOF'
 [Service]
 ExecStartPre=/bin/sleep 30
 EOF
 
   mkdir -p /etc/systemd/system/fail2ban.service.d
-  cat > /etc/systemd/system/fail2ban.service.d/ncp-delay-automount.conf <<'EOF'
+  cat > /etc/systemd/system/fail2ban.service.d/nettserver-delay-automount.conf <<'EOF'
 [Service]
 ExecStartPre=/bin/sleep 10
 EOF
