@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Fail2ban for NextCloudPi
+# Fail2ban
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com/2017/02/24/nextcloudpi-fail2ban-installer/
 #
 
 
@@ -132,7 +130,7 @@ protocol   = tcp
 chain      = INPUT
 action_    = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
 action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
-           sendmail-whois-lines[name=%(__name__)s, dest=$EMAIL, sender=ncp-fail2ban@ownyourbits.com]
+           sendmail-whois-lines[name=%(__name__)s, dest=$EMAIL, sender=nettserver-fail2ban@cloud]
 action = %($ACTION)s
 
 #
