@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# Check HDD health
+# Check NETTSERVER HDD health
 #
-# Copyleft 2018 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com
 #
-
-
 
 install()
 {
