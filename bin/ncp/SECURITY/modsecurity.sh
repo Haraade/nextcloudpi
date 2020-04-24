@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# modsecurity WAF installation on Raspbian 
+# modsecurity WAF installation
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at ownyourbits.com
 #
 
 NCDIR=/var/www/nextcloud/
-NCPWB=/var/www/ncp-web/
+NETTSERVERWB=/var/www/nettserver-web/
 
 install()
 {
@@ -19,7 +17,7 @@ install()
 
   cat >> /etc/modsecurity/crs/crs-setup.conf <<'EOF'
 
-  # NextCloudPi: allow PROPFIND for webDAV
+  # NETTSERVER: allow PROPFIND for webDAV
   SecAction "id:900200, phase:1, nolog, pass, t:none, setvar:'tx.allowed_methods=GET HEAD POST OPTIONS PROPFIND'"
 EOF
 
@@ -70,15 +68,12 @@ configure()
   SecRuleRemoveById 981401             # Content-Type Response Header is Missing and X-Content-Type-Options is either missing or not set to 'nosniff'
   SecRuleRemoveById 200002             # Failed to parse request body
 
-  # UPLOADS ( https://github.com/nextcloud/nextcloudpi/issues/959#issuecomment-529150562 )
+  # UPLOADS
   SecRequestBodyNoFilesLimit 536870912
 
   # GENERAL
   SecRuleRemoveById 920350             # Host header is a numeric IP address
-
-  # REGISTERED WARNINGS, BUT DID NOT HAVE TO DISABLE THEM
-  #SecRuleRemoveById 981220 900046 981407
-  #SecRuleRemoveById 981222 981405 981185 949160
+ 
 
 </Directory>
 <Directory $NCPWB>
