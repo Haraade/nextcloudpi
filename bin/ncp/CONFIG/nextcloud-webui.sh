@@ -2,26 +2,23 @@
 
 # Periodically synchronize NextCloud for externally modified files
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
-
 
 is_active()
 {
-  a2query -s ncp &>/dev/null
+  a2query -s nettserver &>/dev/null
 }
 
 configure() 
 {
   if [[ $ACTIVE != "yes" ]]; then
-    a2dissite ncp
-    echo "ncp-web disabled"
+    a2dissite nettserver
+    echo "nettserver-web disabled"
   else
-    a2ensite ncp
-    echo "ncp-web enabled"
+    a2ensite nettserver
+    echo "nettserver-web enabled"
   fi
 
   # delayed in bg so it does not kill the connection, and we get AJAX response
