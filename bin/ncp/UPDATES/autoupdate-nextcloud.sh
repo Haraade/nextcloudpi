@@ -2,10 +2,8 @@
 
 # Automatically apply Nextcloud updates
 #
-# Copyleft 2018 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
 
 # just change NCVER and re-activate in update.sh to upgrade users
@@ -14,27 +12,27 @@ source /usr/local/etc/library.sh # sets NCVER
 configure()
 {
   [[ "$ACTIVE" != "yes" ]] && {
-    rm -f /etc/cron.daily/ncp-autoupdate-nc
+    rm -f /etc/cron.daily/nettserver-autoupdate-nextcloud
     echo "automatic Nextcloud updates disabled"
     return 0
   }
 
-  cat > /etc/cron.daily/ncp-autoupdate-nc <<EOF
+  cat > /etc/cron.daily/nettserver-autoupdate-nextcloud <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
 
-echo -e "[ncp-update-nc]"                          >> /var/log/ncp.log
-/usr/local/bin/ncp-update-nc "$NCVER" 2>&1 | tee -a /var/log/ncp.log
+echo -e "[nettserver-update-nextcloud]"                          >> /var/log/nettserver.log
+/usr/local/bin/nettserver-update-nextcloud "$NCVER" 2>&1 | tee -a /var/log/nettserver.log
 
 if [[ \${PIPESTATUS[0]} -eq 0 ]]; then
 
   VER="\$( /usr/local/bin/ncc status | grep "version:" | awk '{ print \$3 }' )"
 
-  notify_admin "NextCloudPi" "Nextcloud was updated to \$VER"
+  notify_admin "NETTSERVER" "Nextcloud was updated to \$VER"
 fi
-echo "" >> /var/log/ncp.log
+echo "" >> /var/log/nettserver.log
 EOF
-  chmod 755 /etc/cron.daily/ncp-autoupdate-nc
+  chmod 755 /etc/cron.daily/nettserver-autoupdate-nextcloud
   echo "automatic Nextcloud updates enabled"
 }
 
