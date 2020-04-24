@@ -1,17 +1,15 @@
 #!/bin/bash
 
-# NextCloudPi function library
+# NETTSERVER function library
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at ownyourbits.com
 #
 
-NCPCFG=${NCPCFG:-/usr/local/etc/ncp.cfg}
-CFGDIR=/usr/local/etc/ncp-config.d
-BINDIR=/usr/local/bin/ncp
-BINDIR=/usr/local/bin/ncp
+NETTSERVERCFG=${NETTSERVERCFG:-/usr/local/etc/nettserver.cfg}
+CFGDIR=/usr/local/etc/nettserver-config.d
+BINDIR=/usr/local/bin/nettserver
+BINDIR=/usr/local/bin/nettserver
 
 command -v jq &>/dev/null || {
   apt-get update
@@ -26,9 +24,9 @@ command -v jq &>/dev/null || {
 
 function configure_app()
 {
-  local ncp_app="$1"
-  local cfg_file="$CFGDIR/$ncp_app.cfg"
-  local backtitle="NextCloudPi installer configuration"
+  local nettserver_app="$1"
+  local cfg_file="$CFGDIR/$nettserver_app.cfg"
+  local backtitle="NETTSERVER installer configuration"
   local ret=1
 
   # checks
@@ -61,7 +59,7 @@ function configure_app()
     local value
     value="$( dialog --ok-label "Start" \
                      --no-lines --backtitle "$backtitle" \
-                     --form "Enter configuration for $ncp_app" \
+                     --form "Enter configuration for $nettserver_app" \
                      20 70 0 $parameters \
                3>&1 1>&2 2>&3 )"
     res=$?
@@ -104,8 +102,8 @@ function configure_app()
 
 function run_app()
 {
-  local ncp_app=$1
-  local script="$(find "$BINDIR" -name $ncp_app.sh | head -1)"
+  local nettserver_app=$1
+  local script="$(find "$BINDIR" -name $nettserver_app.sh | head -1)"
 
   [[ -f "$script" ]] || { echo "file $script not found"; return 1; }
 
@@ -116,9 +114,9 @@ function run_app()
 function run_app_unsafe()
 {
   local script=$1
-  local ncp_app="$(basename "$script" .sh)"
-  local cfg_file="$CFGDIR/$ncp_app.cfg"
-  local log=/var/log/ncp.log
+  local nettserver_app="$(basename "$script" .sh)"
+  local cfg_file="$CFGDIR/$nettserver_app.cfg"
+  local log=/var/log/nettserver.log
 
   [[ -f "$script" ]] || { echo "file $script not found"; return 1; }
 
@@ -126,8 +124,8 @@ function run_app_unsafe()
   chmod 640           $log
   chown root:www-data $log
 
-  echo "Running $ncp_app"
-  echo "[ $ncp_app ]" >> $log
+  echo "Running $nettserver_app"
+  echo "[ $nettserver_app ]" >> $log
 
   # read script
   unset configure
@@ -156,12 +154,12 @@ function run_app_unsafe()
 
 function is_active_app()
 {
-  local ncp_app=$1
+  local nettserver_app=$1
   local bin_dir=${2:-.}
-  local script="$bin_dir/$ncp_app.sh"
-  local cfg_file="$CFGDIR/$ncp_app.cfg"
+  local script="$bin_dir/$nettserver_app.sh"
+  local cfg_file="$CFGDIR/$nettserver_app.cfg"
 
-  [[ -f "$script" ]] || local script="$(find "$BINDIR" -name $ncp_app.sh | head -1)"
+  [[ -f "$script" ]] || local script="$(find "$BINDIR" -name $nettserver_app.sh | head -1)"
   [[ -f "$script" ]] || { echo "file $script not found"; return 1; }
 
   # function
@@ -181,8 +179,8 @@ function is_active_app()
 # show an info box for a script if the INFO variable is set in the script
 function info_app()
 {
-  local ncp_app=$1
-  local cfg_file="$CFGDIR/$ncp_app.cfg"
+  local nettserver_app=$1
+  local cfg_file="$CFGDIR/$nettserver_app.cfg"
 
   local cfg="$( cat "$cfg_file" 2>/dev/null )"
   local info=$( jq -r .info <<<"$cfg" )
@@ -192,7 +190,7 @@ function info_app()
   [[ "$infotitle" == "" ]] || [[ "$infotitle" == "null" ]] && infotitle="Info"
 
   whiptail --yesno \
-	  --backtitle "NextCloudPi configuration" \
+	  --backtitle "NETTSERVER configuration" \
 	  --title "$infotitle" \
 	  --yes-button "I understand" \
 	  --no-button "Go back" \
@@ -201,20 +199,20 @@ function info_app()
 
 function install_app()
 {
-  local ncp_app=$1
+  local nettserver_app=$1
 
   # $1 can be either an installed app name or an app script
-  if [[ -f "$ncp_app" ]]; then
-    local script="$ncp_app"
-    local ncp_app="$(basename "$script" .sh)"
+  if [[ -f "$nettserver_app" ]]; then
+    local script="$nettserver_app"
+    local nettserver_app="$(basename "$script" .sh)"
   else
-    local script="$(find "$BINDIR" -name $ncp_app.sh | head -1)"
+    local script="$(find "$BINDIR" -name $nettserver_app.sh | head -1)"
   fi
 
   # do it
   unset install
   source "$script"
-  echo "Installing $ncp_app"
+  echo "Installing $nettserver_app"
   (install)
 }
 
@@ -273,7 +271,7 @@ function is_more_recent_than()
 
 function check_distro()
 {
-  local cfg="${1:-$NCPCFG}"
+  local cfg="${1:-$NETTSERVERCFG}"
   local supported=$(jq -r .release "$cfg")
   grep -q "$supported" <(lsb_release -sc) && return 0
   return 1
