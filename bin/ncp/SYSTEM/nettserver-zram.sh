@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# NextCloudPi ZRAM settings
+# NETTSERVER ZRAM settings
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
-
 
 install()
 {
@@ -17,17 +14,16 @@ Description=Set up ZRAM
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/ncp-zram start
-ExecStop=/usr/local/bin/ncp-zram  stop
+ExecStart=/usr/local/bin/nettserver-zram start
+ExecStop=/usr/local/bin/nettserver-zram  stop
 RemainAfterExit=yes
 
 [Install]
 WantedBy=sysinit.target
 EOF
 
-cat > /usr/local/bin/ncp-zram <<'EOF'
+cat > /usr/local/bin/nettserver-zram <<'EOF'
 #!/bin/bash
-# inspired by https://github.com/novaspirit/rpi_zram/blob/master/zram.sh
 
 case "$1" in
   start)
@@ -58,7 +54,7 @@ case "$1" in
       ;;
 esac
 EOF
-chmod +x /usr/local/bin/ncp-zram
+chmod +x /usr/local/bin/nettserver-zram
 }
 
 configure()
