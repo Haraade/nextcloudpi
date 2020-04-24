@@ -1,23 +1,20 @@
 #!/bin/bash
 
-# Data dir configuration script for NextCloudPi
+# Data dir configuration script for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/
 #
-
 
 is_active()
 {
-  local SRCDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-ncp.cnf | awk -F "= " '{ print $2 }' )
+  local SRCDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-nettserver.cnf | awk -F "= " '{ print $2 }' )
   [[ "$SRCDIR" != "/var/lib/mysql" ]]
 }
 
 configure()
 {
-  local SRCDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-ncp.cnf | awk -F "= " '{ print $2 }' )
+  local SRCDIR=$( grep datadir /etc/mysql/mariadb.conf.d/90-nettserver.cnf | awk -F "= " '{ print $2 }' )
   [ -d "$SRCDIR" ] || { echo -e "database directory $SRCDIR not found"; return 1; }
 
   [ -d "$DBDIR" ] && {
@@ -44,7 +41,7 @@ configure()
   echo "moving database to $DBDIR..."
   service mysql stop
   mv "$SRCDIR" "$DBDIR" && \
-    sed -i "s|^datadir.*|datadir = $DBDIR|" /etc/mysql/mariadb.conf.d/90-ncp.cnf
+    sed -i "s|^datadir.*|datadir = $DBDIR|" /etc/mysql/mariadb.conf.d/90-nettserver.cnf
   service mysql start 
 
   sudo -u www-data php occ maintenance:mode --off
