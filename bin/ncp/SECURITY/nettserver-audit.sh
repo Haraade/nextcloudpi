@@ -1,37 +1,31 @@
 #!/bin/bash
 
-# Launch security audit reports for NextCloudPi
+# Launch security audit reports for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/02/13/nextcloud-ready-raspberry-pi-image/
 #
-
 
 install()
 {
   apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     lynis debsecan debian-goodies debsums
-  cp /etc/lynis/default.prf /etc/lynis/ncp.prf
-  cat >> /etc/lynis/ncp.prf <<EOF
+  cp /etc/lynis/default.prf /etc/lynis/nettserver.prf
+  cat >> /etc/lynis/nettserver.prf <<EOF
 # Won't install apt-listbugs and all its ruby dependencies
 skip-test=CUST-0810
 
 # Won't install puppet or similar
 skip-test=TOOL-5002
 
-# Raspbian doesn't have security sources ( https://www.raspberrypi.org/forums/viewtopic.php?t=98006&p=680175 ) 
-skip-test=PKGS-7388
-
-# We have a preset partition scheme in the SD card
+# Have a preset partition scheme in the storage
 skip-test=FILE-6310
 
-# We don't use firewire
+# Don't use firewire
 skip-test=STRG-1846
 
-# We use USB in NCP
+# USB is used in nettserver
 skip-test=STRG-1840
 
 # Won't recompile kernel to support auditd
@@ -41,16 +35,13 @@ skip-test=ACCT-9628
 skip-test=HTTP-6640
 skip-test=HTTP-6641
 
-# False positive about mysql root password ( https://github.com/CISOfy/lynis/issues/288 )
+# False positive about mysql root password
 skip-test=DBS-1816
-
-# vmlinuz missing at least in Raspbian
-skip-test=KRNL-5788
 
 # won't recompile kernels for PAE NX
 skip-test=KRNL-5677
 
-# false positive with DNS settings. We use mDNS and dnsmasq (and they work)
+# false positive with DNS settings. mDNS and dnsmasq
 skip-test=NAME-4028
 
 # false positive due to fail2ban
@@ -61,7 +52,7 @@ EOF
 configure()
 {
   echo "General security audit"
-  lynis audit system --profile /etc/lynis/ncp.prf --no-colors
+  lynis audit system --profile /etc/lynis/nettserver.prf --no-colors
 
   echo "Known vulnerabilities in this system"
   debsecan
