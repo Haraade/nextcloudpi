@@ -1,21 +1,19 @@
 #!/bin/bash
 
-# Change password for the ncp-web user
+# Change password for the nettserver-web user
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
 
 configure()
 {
   # update password
-  echo -e "$PASSWORD\n$CONFIRM" | passwd ncp &>/dev/null && \
+  echo -e "$PASSWORD\n$CONFIRM" | passwd nettserver &>/dev/null && \
     echo "password updated successfully" || \
     { echo "passwords do not match"; return 1; }
 
-  # persist ncp-web password in docker container
+  # persist nettserver-web password in docker container
   [[ -f /.docker-image ]] && {
     mv /etc/shadow /data/etc/shadow
     ln -s /data/etc/shadow /etc/shadow
@@ -24,9 +22,9 @@ configure()
   # Run cron.php once now to get all checks right in CI.
   sudo -u www-data php /var/www/nextcloud/cron.php
 
-  # activate NCP
-  a2ensite  ncp nextcloud
-  a2dissite ncp-activation
+  # activate NETTSERVER
+  a2ensite  nettserver nextcloud
+  a2dissite nettserver-activation
   bash -c "sleep 1.5 && service apache2 reload" &>/dev/null &
 }
 
