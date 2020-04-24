@@ -1,32 +1,29 @@
 #!/bin/bash
 
-# Automatically apply NextCloudPi updates
+# Automatically apply NETTSERVER updates
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
-
 
 configure()
 {
   [[ $ACTIVE != "yes" ]] && { 
-    rm -f /etc/cron.daily/ncp-autoupdate
-    echo "automatic NextCloudPi updates disabled"
+    rm -f /etc/cron.daily/nettserver-autoupdate
+    echo "automatic NETTSERVER updates disabled"
     return 0
   }
 
-  cat > /etc/cron.daily/ncp-autoupdate <<EOF
+  cat > /etc/cron.daily/nettserver-autoupdate <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
-if /usr/local/bin/ncp-test-updates; then
-  /usr/local/bin/ncp-update || exit 1
-  notify_admin "NextCloudPi" "NextCloudPi was updated to \$(cat /usr/local/etc/ncp-version)"
+if /usr/local/bin/nettserver-test-updates; then
+  /usr/local/bin/nettserver-update || exit 1
+  notify_admin "NETTSERVER" "NETTSERVER was updated to \$(cat /usr/local/etc/nettserver-version)"
 fi
 EOF
-  chmod 755 /etc/cron.daily/ncp-autoupdate
-  echo "automatic NextCloudPi updates enabled"
+  chmod 755 /etc/cron.daily/nettserver-autoupdate
+  echo "automatic NETTSERVER updates enabled"
 }
 
 install() { :; }
