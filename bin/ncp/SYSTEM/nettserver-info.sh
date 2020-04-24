@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Print NCP sytem info
+# Print NETTSERVER sytem info
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
-
 
 install()
 { 
@@ -18,14 +15,14 @@ install()
 configure() 
 {
   echo "Gathering information..."
-  local OUT="$( bash /usr/local/bin/ncp-diag )"
+  local OUT="$( bash /usr/local/bin/nettserver-diag )"
 
   # info
   echo "$OUT" | column -t -s'|'
 
   # suggestions
   echo
-  bash /usr/local/bin/ncp-suggestions "$OUT"
+  bash /usr/local/bin/nettserver-suggestions "$OUT"
  
   return 0
 }
