@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Data dir configuration script for NextCloudPi
+# Swap configuration script for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/
 #
-
 
 is_active()
 {
@@ -24,12 +21,12 @@ configure()
   [[ -d "$DSTDIR"            ]] || { echo "$DSTDIR Doesn't exist. Abort";     return 1; }
 
   [[ "$( stat -fc%T "$DSTDIR" )" == "btrfs" ]] && {
-    echo "BTRFS doesn't support swapfiles. You can still use nc-zram"
+    echo "BTRFS doesn't support swapfiles. You can still use nettserver-zram"
     return 1
   }
 
   [[ $( stat -fc%d / ) == $( stat -fc%d "$DSTDIR" ) ]] && \
-    echo -e "INFO: moving swapfile to another place in the same SD card\nIf you want to use an external mount, make sure it is properly set up"
+    echo -e "INFO: moving swapfile to another place in the same eMMC Module\nUse an external mount, make sure it is properly set up"
 
   sed -i "s|#\?CONF_SWAPFILE=.*|CONF_SWAPFILE=$SWAPFILE|" /etc/dphys-swapfile
   sed -i "s|#\?CONF_SWAPSIZE=.*|CONF_SWAPSIZE=$SWAPSIZE|" /etc/dphys-swapfile
