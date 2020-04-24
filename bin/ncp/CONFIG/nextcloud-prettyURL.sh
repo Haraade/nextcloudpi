@@ -2,9 +2,7 @@
 #
 # Activate/deactivate a pretty URL without index.php
 #
-#
-# Copyleft 2018 by Timo Stiefel and xxx
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 
 
 
@@ -33,7 +31,7 @@ configure()
       echo "There has been an error."
       return 1
     }
-    echo "Your cloud does no longer have a pretty domain name."
+    echo "nettserver does no longer have a pretty domain name."
   } || {
     sudo -u www-data php "$OCC" config:system:set htaccess.RewriteBase --value="/"
     sudo -u www-data php "$OCC" maintenance:update:htaccess
@@ -41,7 +39,7 @@ configure()
       echo "There has been an error."
       return 1
     }
-    echo "Your cloud now has a pretty domain name."
+    echo "nettserver has a pretty domain name."
   }
   bash -c "sleep 2 && service apache2 reload" &>/dev/null &
   return 0
