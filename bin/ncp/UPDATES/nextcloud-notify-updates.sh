@@ -2,13 +2,9 @@
 
 # Install the latest News third party app
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
-
-
 
 # check every hour
 CHECKINTERVAL=1
@@ -17,22 +13,22 @@ NCDIR=/var/www/nextcloud
 configure()
 {
   [[ $ACTIVE != "yes" ]] && {
-    rm -f /etc/cron.d/ncp-notify-updates
+    rm -f /etc/cron.d/nettserver-notify-updates
     service cron restart
     echo "update web notifications disabled"
     return 0
   }
 
   # code
-  cat > /usr/local/bin/ncp-notify-update <<EOF
+  cat > /usr/local/bin/nettserver-notify-update <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
-VERFILE=/usr/local/etc/ncp-version
-LATEST=/var/run/.ncp-latest-version
-NOTIFIED=/var/run/.ncp-version-notified
+VERFILE=/usr/local/etc/nettserver-version
+LATEST=/var/run/.nettserver-latest-version
+NOTIFIED=/var/run/.nettserver-version-notified
 
 test -e \$LATEST || exit 0;
-/usr/local/bin/ncp-test-updates || { echo "NextCloudPi up to date"; exit 0; }
+/usr/local/bin/nettserver-test-updates || { echo "NETTSERVER up to date"; exit 0; }
 
 test -e \$NOTIFIED && [[ "\$( cat \$LATEST )" == "\$( cat \$NOTIFIED )" ]] && {
   echo "Found update from \$( cat \$VERFILE ) to \$( cat \$LATEST ). Already notified"
@@ -45,20 +41,20 @@ IFACE=\$( ip r | grep "default via" | awk '{ print \$5 }' | head -1 )
 IP=\$( ip a show dev "\$IFACE" | grep global | grep -oP '\d{1,3}(\.\d{1,3}){3}' | head -1 )
 
 notify_admin \
-  "NextCloudPi update" \
+  "NETTSERVER update" \
   "Update from \$( cat \$VERFILE ) to \$( cat \$LATEST ) is available. Update from https://\$IP:4443"
 
 cat \$LATEST > \$NOTIFIED
 EOF
-  chmod +x /usr/local/bin/ncp-notify-update
+  chmod +x /usr/local/bin/nettserver-notify-update
 
-  cat > /usr/local/bin/ncp-notify-unattended-upgrade <<EOF
+  cat > /usr/local/bin/nettserver-notify-unattended-upgrade <<EOF
 #!/bin/bash
 source /usr/local/etc/library.sh
 
 LOGFILE=/var/log/unattended-upgrades/unattended-upgrades.log
-STAMPFILE=/var/run/.ncp-notify-unattended-upgrades
-VERFILE=/usr/local/etc/ncp-version
+STAMPFILE=/var/run/.nettserver-notify-unattended-upgrades
+VERFILE=/usr/local/etc/nettserver-version
 
 test -e "\$LOGFILE" || { echo "\$LOGFILE not found"; exit 1; }
 
@@ -77,14 +73,14 @@ echo -e "Packages automatically upgraded: \$PKGS\\n"
 
 # notify
 notify_admin \
-  "NextCloudPi Unattended Upgrades" \
+  "NETTSERVER Unattended Upgrades" \
   "Packages automatically upgraded \$PKGS"
 EOF
-  chmod +x /usr/local/bin/ncp-notify-unattended-upgrade
+  chmod +x /usr/local/bin/nettserver-notify-unattended-upgrade
 
-  # check every hour at 40th minute
-  echo -e "MAILTO=\"\"\n40  */${CHECKINTERVAL} *  *  *  root /usr/local/bin/ncp-notify-update && /usr/local/bin/ncp-notify-unattended-upgrade" > /etc/cron.d/ncp-notify-updates
-  chmod 644 /etc/cron.d/ncp-notify-updates
+  # check every hour at 50th minute
+  echo -e "MAILTO=\"\"\n50  */${CHECKINTERVAL} *  *  *  root /usr/local/bin/nettserver-notify-update && /usr/local/bin/nettserver-notify-unattended-upgrade" > /etc/cron.d/nettserver-notify-updates
+  chmod 644 /etc/cron.d/nettserver-notify-updates
   [[ -f /run/crond.pid ]] && service cron restart
 
   echo "update web notifications enabled"
