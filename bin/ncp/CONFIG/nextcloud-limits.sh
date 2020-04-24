@@ -1,28 +1,26 @@
 #!/bin/bash
 
-# System limits configuration for NextCloudPi
+# System limits configuration for NETTSERVER
 #
-# Copyleft 2017 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at https://ownyourbits.com/2017/03/13/nextcloudpi-gets-nextcloudpi-config/
 #
 
 configure()
 {
   source /usr/local/etc/library.sh # sets PHPVER
 
-  # Set auto memory limit to 75% of the total memory
+  # Set auto memory limit to 80% of the total memory
   local TOTAL_MEM="$( free -b | sed -n 2p | awk '{ print $2 }' )"
-  AUTOMEM=$(( TOTAL_MEM * 75 / 100 ))
+  AUTOMEM=$(( TOTAL_MEM * 80 / 100 ))
 
   # MAX FILESIZE
-  local CONF=/etc/php/${PHPVER}/fpm/conf.d/90-ncp.ini
+  local CONF=/etc/php/${PHPVER}/fpm/conf.d/90-nettserver.ini
   local CURRENT_FILE_SIZE="$( grep "^upload_max_filesize" "$CONF" | sed 's|.*=||' )"
   [[ "$MAXFILESIZE" == "0" ]] && MAXFILESIZE=10G
 
   # MAX PHP MEMORY
-  local CONF=/etc/php/${PHPVER}/fpm/conf.d/90-ncp.ini
+  local CONF=/etc/php/${PHPVER}/fpm/conf.d/90-nettserver.ini
   local CURRENT_PHP_MEM="$( grep "^memory_limit" "$CONF" | sed 's|.*=||' )"
   [[ "$MEMORYLIMIT" == "0" ]] && MEMORYLIMIT=$AUTOMEM && echo "Using ${AUTOMEM}B for PHP"
   sed -i "s/^post_max_size=.*/post_max_size=$MAXFILESIZE/"             "$CONF"
@@ -40,7 +38,7 @@ configure()
 
   # DATABASE MEMORY
   AUTOMEM=$(( TOTAL_MEM * 40 / 100 ))
-  local CONF=/etc/mysql/mariadb.conf.d/91-ncp.cnf
+  local CONF=/etc/mysql/mariadb.conf.d/91-nettserver.cnf
   local CURRENT_DB_MEM=$(grep "^innodb_buffer_pool_size" "$CONF" | awk '{ print $3 }')
   echo "Using $AUTOMEM memory for the database"
   [[ "$CURRENT_DB_MEM" != "$AUTOMEM" ]] && {
