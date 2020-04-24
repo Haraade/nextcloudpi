@@ -2,15 +2,13 @@
 
 # Periodically update all installed Nextcloud Apps
 #
-# Copyleft 2019 by Ignacio Nunez Hernanz <nacho _a_t_ ownyourbits _d_o_t_ com>
-# GPL licensed (see end of file) * Use at your own risk!
+# GPL licensed - end of file
 #
-# More at: https://ownyourbits.com
 #
 
 configure() 
 {
-  local cronfile=/etc/cron.daily/ncp-autoupdate-apps
+  local cronfile=/etc/cron.daily/nettserver-autoupdate-apps
 
   [[ "$ACTIVE" != "yes" ]] && { 
     rm -f "$cronfile"
@@ -22,11 +20,11 @@ configure()
 #!/bin/bash
 source /usr/local/etc/library.sh
 OUT="\$(
-echo "[ nc-update-nc-apps-auto ]"
+echo "[ nextcloud-autoupdate-apps ]"
 echo "checking for updates..."
 /usr/local/bin/ncc app:update --all -n
 )"
-echo "\$OUT" >> /var/log/ncp.log
+echo "\$OUT" >> /var/log/nettserver.log
 
 APPS=\$( echo "\$OUT" | grep 'updated\$' | awk '{ print \$1 }')
 [[ "\$APPS" != "" ]] && notify_admin "Apps updated" "\$APPS"
