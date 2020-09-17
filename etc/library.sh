@@ -127,7 +127,7 @@ function run_app_unsafe()
   chown root:www-data $log
 
   echo "Running $ncp_app"
-  echo "[ $ncp_app ]" >> $log
+  echo "[ $ncp_app ] ($(date))" >> $log
 
   # read script
   unset configure
@@ -296,7 +296,7 @@ function clear_password_fields()
 function apt_install()
 {
   apt-get update
-  apt-get install -y --no-install-recommends -o Dpkg::Options::=--force-confdef
+  apt-get install -y --no-install-recommends -o Dpkg::Options::=--force-confdef -o Dpkg::Options::="--force-confold" "$@"
 }
 
 function notify_admin()
