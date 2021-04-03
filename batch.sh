@@ -38,6 +38,9 @@ IMG="$( ls -1t tmp/*.img | head -1 )"
 ./build-SD-armbian.sh rockpro64 RockPro64
 ./build-SD-armbian.sh rock64 Rock64
 ./build-SD-armbian.sh bananapi Bananapi
+./build-SD-armbian.sh odroidhc4 OdroidHC4
+./build-SD-armbian.sh odroidc4 OdroidC4
+./build-SD-armbian.sh odroidc2 OdroidC2
 #./build-SD-armbian.sh orangepizeroplus2-h5 OrangePiZeroPlus2
 
 # VM
@@ -54,50 +57,61 @@ export DOCKER_CLI_EXPERIMENTAL=enabled
 
 # TODO test first
 #&& {
-  docker push ownyourbits/nextcloudpi-x86
+  docker push ownyourbits/nextcloudpi-x86:latest
   docker push ownyourbits/nextcloudpi-x86:${version}
-  docker push ownyourbits/nextcloud-x86
+  docker push ownyourbits/nextcloud-x86:latest
   docker push ownyourbits/nextcloud-x86:${version}
-  docker push ownyourbits/lamp-x86
+  docker push ownyourbits/lamp-x86:latest
   docker push ownyourbits/lamp-x86:${version}
-  docker push ownyourbits/debian-ncp-x86
+  docker push ownyourbits/debian-ncp-x86:latest
   docker push ownyourbits/debian-ncp-x86:${version}
 #}
 
 # TODO test first && {
-  docker push ownyourbits/nextcloudpi-armhf
+  docker push ownyourbits/nextcloudpi-armhf:latest
   docker push ownyourbits/nextcloudpi-armhf:${version}
-  docker push ownyourbits/nextcloud-armhf
+  docker push ownyourbits/nextcloud-armhf:latest
   docker push ownyourbits/nextcloud-armhf:${version}
-  docker push ownyourbits/lamp-armhf
+  docker push ownyourbits/lamp-armhf:latest
   docker push ownyourbits/lamp-armhf:${version}
-  docker push ownyourbits/debian-ncp-armhf
+  docker push ownyourbits/debian-ncp-armhf:latest
   docker push ownyourbits/debian-ncp-armhf:${version}
 #}
 
 # TODO test first && {
-  docker push ownyourbits/nextcloudpi-arm64
+  docker push ownyourbits/nextcloudpi-arm64:latest
   docker push ownyourbits/nextcloudpi-arm64:${version}
-  docker push ownyourbits/nextcloud-arm64
+  docker push ownyourbits/nextcloud-arm64:latest
   docker push ownyourbits/nextcloud-arm64:${version}
-  docker push ownyourbits/lamp-arm64
+  docker push ownyourbits/lamp-arm64:latest
   docker push ownyourbits/lamp-arm64:${version}
-  docker push ownyourbits/debian-ncp-arm64
+  docker push ownyourbits/debian-ncp-arm64:latest
   docker push ownyourbits/debian-ncp-arm64:${version}
 #}
 
 # Docker multi-arch
-docker manifest create --amend ownyourbits/nextcloudpi \
-  ownyourbits/nextcloudpi-x86 \
-  ownyourbits/nextcloudpi-armhf \
-  ownyourbits/nextcloudpi-arm64
+docker manifest create --amend ownyourbits/nextcloudpi:${version} \
+  --amend ownyourbits/nextcloudpi-x86:${version} \
+  --amend ownyourbits/nextcloudpi-armhf:${version} \
+  --amend ownyourbits/nextcloudpi-arm64:${version}
+
+docker manifest create --amend ownyourbits/nextcloudpi:latest \
+  --amend ownyourbits/nextcloudpi-x86:latest \
+  --amend ownyourbits/nextcloudpi-armhf:latest \
+  --amend ownyourbits/nextcloudpi-arm64:latest
 
 
-docker manifest annotate ownyourbits/nextcloudpi ownyourbits/nextcloudpi-x86   --os linux --arch amd64
-docker manifest annotate ownyourbits/nextcloudpi ownyourbits/nextcloudpi-armhf --os linux --arch arm
-docker manifest annotate ownyourbits/nextcloudpi ownyourbits/nextcloudpi-arm64 --os linux --arch arm64
+docker manifest annotate ownyourbits/nextcloudpi:${version} ownyourbits/nextcloudpi-x86:${version}   --os linux --arch amd64
+docker manifest annotate ownyourbits/nextcloudpi:${version} ownyourbits/nextcloudpi-armhf:${version} --os linux --arch arm
+docker manifest annotate ownyourbits/nextcloudpi:${version} ownyourbits/nextcloudpi-arm64:${version} --os linux --arch arm64
 
-docker manifest push -p ownyourbits/nextcloudpi
+docker manifest annotate ownyourbits/nextcloudpi:latest ownyourbits/nextcloudpi-x86:latest   --os linux --arch amd64
+docker manifest annotate ownyourbits/nextcloudpi:latest ownyourbits/nextcloudpi-armhf:latest --os linux --arch arm
+docker manifest annotate ownyourbits/nextcloudpi:latest ownyourbits/nextcloudpi-arm64:latest --os linux --arch arm64
+
+docker manifest push -p ownyourbits/nextcloudpi:${version}
+docker manifest push -p ownyourbits/nextcloudpi:latest
+
 
 # License
 #

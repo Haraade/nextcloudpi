@@ -1,5 +1,39 @@
 
-[v1.29.8](https://github.com/nextcloud/nextcloudpi/commit/90ca096) (2020-08-30) nc-limits: minimum 6 PHP threads (for NC talk)
+[v1.34.7](https://github.com/nextcloud/nextcloudpi/commit/0cce679) (2021-01-19) docker: fix datadir path contents
+
+[v1.34.6](https://github.com/nextcloud/nextcloudpi/commit/84ccf94) (2021-01-18) docker: fix datadir path
+
+[v1.34.5 ](https://github.com/nextcloud/nextcloudpi/commit/afa39fb) (2021-01-18) ncp-config: shorten descriptions
+
+[v1.34.4 ](https://github.com/nextcloud/nextcloudpi/commit/3a3b6a7) (2021-01-17) btrfs-sync: check for existing keys
+
+[v1.34.3 ](https://github.com/nextcloud/nextcloudpi/commit/6cb682a) (2021-01-17) update cron interval
+
+[v1.34.2 ](https://github.com/nextcloud/nextcloudpi/commit/20bd14f) (2021-01-17) wizard: fix letsencrypt empty email
+
+[v1.34.1](https://github.com/nextcloud/nextcloudpi/commit/23eecff) (2021-01-01) unattended-upgrades: fix raspbian origin
+
+[v1.34.0 ](https://github.com/nextcloud/nextcloudpi/commit/ec428a2) (2021-01-01) upgrade to NC20.0.4
+
+[v1.33.1 ](https://github.com/nextcloud/nextcloudpi/commit/42fd597) (2020-12-12) nc-update-nc: improve error messages
+
+[v1.33.0 ](https://github.com/nextcloud/nextcloudpi/commit/ffd0b44) (2020-12-10) upgrade to NC20.0.3
+
+[v1.32.1 ](https://github.com/nextcloud/nextcloudpi/commit/35c0d96) (2020-11-30) nc-update-nc: ncp apps might not exist
+
+[v1.32.0 ](https://github.com/nextcloud/nextcloudpi/commit/7afdc0f) (2020-11-24) upgrade to NC20.0.2
+
+[v1.31.0 ](https://github.com/nextcloud/nextcloudpi/commit/ab9184c) (2020-10-19) upgrade to NC19.0.4
+
+[v1.30.1 ](https://github.com/nextcloud/nextcloudpi/commit/9450613) (2020-10-20) nc-info: fixed api change for portchecker (#1194)
+
+[v1.30.0 ](https://github.com/nextcloud/nextcloudpi/commit/f00fe21) (2020-09-19) upgrade to NC19.0.2
+
+[v1.29.10](https://github.com/nextcloud/nextcloudpi/commit/82baebf) (2020-09-03) ncp-web: added a lot of german locales
+
+[v1.29.9 ](https://github.com/nextcloud/nextcloudpi/commit/3706ed0) (2020-09-12) nc-previews: fix killing generate-all
+
+[v1.29.8 ](https://github.com/nextcloud/nextcloudpi/commit/21a791d) (2020-08-30) nc-limits: minimum 6 PHP threads (for NC talk)
 
 [v1.29.6 ](https://github.com/nextcloud/nextcloudpi/commit/14b78e3) (2020-08-29) ncp-web: Fix the style of the language selection dropdown (chrome)
 
